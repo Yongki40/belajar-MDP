@@ -1,1 +1,0 @@
-Pertemuan 2
