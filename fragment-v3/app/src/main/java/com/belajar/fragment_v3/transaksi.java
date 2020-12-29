@@ -1,12 +1,25 @@
 package com.belajar.fragment_v3;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,33 +28,17 @@ import android.view.ViewGroup;
  */
 public class transaksi extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ArrayList<DataTrans> dataTrans = new ArrayList<>();
 
     public transaksi() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment transaksi.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static transaksi newInstance(String param1, String param2) {
+
+    public static transaksi newInstance(ArrayList<DataTrans> dataTrans) {
         transaksi fragment = new transaksi();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList("dataTrans",dataTrans);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,8 +47,7 @@ public class transaksi extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.dataTrans = getArguments().getParcelableArrayList("dataTrans");
         }
     }
 
@@ -60,5 +56,68 @@ public class transaksi extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_transaksi, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final EditText ednama = view.findViewById(R.id.edNama);
+        final EditText edNilai = view.findViewById(R.id.edNilai);
+        final RadioGroup rdJenis = view.findViewById(R.id.rdJenis);
+        final TextView tvSaldo = view.findViewById(R.id.tvSaldo);
+        Button btn = view.findViewById(R.id.btnTambah);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int selected = rdJenis.getCheckedRadioButtonId();
+                RadioButton rd = view.getRootView().findViewById(selected);
+                String jenis = rd.getText().toString();
+                int nilai = Integer.parseInt(edNilai.getText().toString());
+                String nama = ednama.getText().toString();
+
+                DataTrans data = new DataTrans(nama,jenis,nilai);
+                dataTrans.add(data);
+                Toast.makeText(getActivity(), dataTrans.size()+"", Toast.LENGTH_SHORT).show();
+
+                int saldo = 0;
+                for (DataTrans data1 : dataTrans) {
+                    if(data1.jenis.equals("Pengeluaran")){
+                        saldo -= data1.nilai;
+                    }
+                    else{
+                        saldo += data1.nilai;
+                    }
+                }
+
+
+                tvSaldo.setText(saldo+"");
+                tvSaldo.setTextColor(Color.GREEN);
+
+                if(saldo <= 0){
+                    tvSaldo.setTextColor(Color.RED);
+                }
+            }
+        });
+
+        int saldo = 0;
+        for (DataTrans data : dataTrans) {
+            if(data.jenis.equals("Pengeluaran")){
+                saldo -= data.nilai;
+            }
+            else{
+                saldo += data.nilai;
+            }
+        }
+
+        tvSaldo.setText(saldo+"");
+        tvSaldo.setTextColor(Color.GREEN);
+
+        if(saldo <= 0){
+            tvSaldo.setTextColor(Color.RED);
+        }
+    }
+
+    public void countSaldo(View view){
+
     }
 }

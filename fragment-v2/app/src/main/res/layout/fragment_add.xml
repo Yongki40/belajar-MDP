@@ -1,14 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".addFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaksi"
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
+    </TextView>
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/edtnama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nama Transaksi">
+    </EditText>
+    <RadioGroup
+        android:id="@+id/rgJenis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <RadioButton
+            android:id="@+id/rbtopup"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Topup"
+            android:layout_weight="1"
+            android:padding="10dp">
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/rbpengeluaran"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Pengeluaran"
+            android:layout_weight="1">
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/rbtpemasukan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Pemasukan"
+            android:layout_weight="1">
+        </RadioButton>
+    </RadioGroup>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtnilai"
+        android:hint="Nilai Transaksi">
+    </EditText>
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btntambah"
+        android:text="tambah">
+    </Button>
+    <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="horizontal"
+        android:gravity="bottom">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Saldo :"
+            android:textSize="25sp">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1000"
+            android:id="@+id/tvsaldo"
+            android:textSize="25sp"
+            android:gravity="right">
+        </TextView>
+    </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

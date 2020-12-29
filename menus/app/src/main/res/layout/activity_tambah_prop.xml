@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tambahProp">
+    tools:context=".tambahProp"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tambah Property"
+        android:textSize="30sp"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:layout_marginTop="30dp"
+        android:layout_width="178dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Alamat"
+        android:id="@+id/edAlamat"/>
+
+    <EditText
+        android:layout_marginTop="30dp"
+        android:layout_width="178dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Harga"
+        android:id="@+id/edHarga"/>
+
+    <EditText
+        android:layout_marginTop="30dp"
+        android:layout_width="178dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Luas"
+        android:id="@+id/edLuas"/>
+
+    <Button
+        android:layout_marginTop="30dp"
+        android:layout_width="178dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="TAMBAH"
+        android:id="@+id/btnLogin"
+        android:onClick="tambahClick"/>
+</LinearLayout>

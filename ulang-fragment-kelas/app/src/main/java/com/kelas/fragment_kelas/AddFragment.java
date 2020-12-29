@@ -1,16 +1,24 @@
 package com.kelas.fragment_kelas;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class AddFragment extends Fragment {
 
@@ -19,9 +27,9 @@ public class AddFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public AddFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -32,26 +40,23 @@ public class AddFragment extends Fragment {
      * @return A new instance of fragment AddFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddFragment newInstance(String param1, String param2) {
-        AddFragment fragment = new AddFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    public AddFragment() {
-        // Required empty public constructor
+    EditText editText_nrp,editText_name;
+    RadioGroup radioGroup_gender;
+    RadioButton radioButton_male;
+    Spinner spinner_major;
+    Button button_add;
+
+    OnMhsAddedListener onMhsAddedListener;
+
+    public static AddFragment newInstance() {
+        AddFragment fragment = new AddFragment();
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -59,5 +64,39 @@ public class AddFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add, container, false);
+    }
+
+    //declare dalem sini setelah semua view nya terbuat
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        editText_nrp = view.findViewById(R.id.editText_nrp);
+        editText_name = view.findViewById(R.id.editText_name);
+        radioGroup_gender = view.findViewById(R.id.radioGroup_gender);
+        spinner_major = view.findViewById(R.id.spinner_major);
+        button_add = view.findViewById(R.id.button_add);
+
+        button_add.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                int selectedId = radioGroup_gender.getCheckedRadioButtonId();
+                RadioButton radioButton = view.getRootView().findViewById(selectedId);
+                Mahasiswa mhs = new Mahasiswa(Integer.parseInt(editText_nrp.getText().toString()),editText_name.getText().toString(),
+                        radioButton.getText().toString(),spinner_major.getSelectedItem().toString());
+
+                if(onMhsAddedListener !=null){
+                    onMhsAddedListener.onMhsAdded(mhs);
+                }
+            }
+        });
+    }
+
+    public void setOnMhsAddedListener(OnMhsAddedListener onMhsAddedListener) {
+        this.onMhsAddedListener = onMhsAddedListener;
+    }
+
+    public interface OnMhsAddedListener{
+        void onMhsAdded(Mahasiswa mhs);
     }
 }

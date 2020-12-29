@@ -1,12 +1,23 @@
 package com.belajar.roomv1;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,33 +26,18 @@ import android.view.ViewGroup;
  */
 public class InputNilai extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    ArrayList<NilaiPrak> nilaiPraks = new ArrayList<>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    AppDatabase db;
     public InputNilai() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InputNilai.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static InputNilai newInstance(String param1, String param2) {
+
+    public static InputNilai newInstance(ArrayList<NilaiPrak> nilaiPraks ) {
         InputNilai fragment = new InputNilai();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList("nilaiPraks",nilaiPraks);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,8 +46,7 @@ public class InputNilai extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.nilaiPraks = getArguments().getParcelableArrayList("nilaiPraks");
         }
     }
 
@@ -60,5 +55,69 @@ public class InputNilai extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_input_nilai, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final Spinner spMinggu = view.findViewById(R.id.spMinggu);
+        db = AppDatabase.getAppDatabase(getActivity());
+        String[] minggus = {
+                "Minggu 1",
+                "Minggu 2",
+                "Minggu 3",
+                "Minggu 4",
+                "Minggu 5",
+                "Minggu 6",
+                "Minggu 7",
+                "Ta",
+        };
+        ArrayAdapter adapter;
+        adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_dropdown_item,minggus);
+        spMinggu.setAdapter(adapter);
+        final RadioGroup rdgroup = view.findViewById(R.id.rdJenis);
+
+        final int selected = rdgroup.getCheckedRadioButtonId();
+        final EditText edNilai = view.findViewById(R.id.edNilai);
+        Button btnSubmit = view.findViewById(R.id.btnSubmit);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RadioButton rdPilihan = rdgroup.getRootView().findViewById(selected);
+                String pilihan = rdPilihan.getText().toString();
+                if(pilihan.equals("absen")){
+                    int nilai = Integer.parseInt(edNilai.getText().toString());
+                    nilaiPraks.get(spMinggu.getSelectedItemPosition()).setAbsen(nilai);
+//                    new addNilaiPrakTask().execute(nilaiPraks.get(spMinggu.getSelectedItemPosition()));
+                }
+                else if(pilihan.equals("tes awal")){
+                    int nilai = Integer.parseInt(edNilai.getText().toString());
+                    nilaiPraks.get(spMinggu.getSelectedItemPosition()).setTes(nilai);;
+                }
+                else if(pilihan.equals("materi")){
+                    int nilai = Integer.parseInt(edNilai.getText().toString());
+                    nilaiPraks.get(spMinggu.getSelectedItemPosition()).setMateri(nilai);;
+                }
+                else if(pilihan.equals("tugas")){
+                    int nilai = Integer.parseInt(edNilai.getText().toString());
+                    nilaiPraks.get(spMinggu.getSelectedItemPosition()).setTugas(nilai);;
+                }
+            }
+        });
+
+    }
+
+    private class addNilaiPrakTask extends AsyncTask<NilaiPrak,Void,Void> {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(NilaiPrak... nilaiPraks) {
+            db.nilaiPrak().update(nilaiPraks[0]);
+            return null;
+        }
     }
 }
